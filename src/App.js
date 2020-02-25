@@ -1,17 +1,10 @@
-import React, { useState, useRef } from 'react';
+import React from 'react';
 import styled from 'styled-components'
 import './App.css';
 import AddTask from './components/AddTask';
 import TaskList from './components/TaskList';
 
 export default function App() {
-
-    // State hooks
-    const [entries, setEntries] = useState([]);
-    const [show, setShow] = useState(false);
-
-    // Ref hooks
-    const target = useRef(null);
 
     return (
         <AppContainer className="App">

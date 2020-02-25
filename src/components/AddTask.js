@@ -5,12 +5,18 @@ import { addTask } from "../redux/actions";
 import Overlay from 'react-bootstrap/Overlay'
 import Tooltip from 'react-bootstrap/Tooltip'
 
-const AddTask = ({ task }) => {
+const AddTask = (props) => {
 
     const [input, setInput] = useState("");
     const [show, setShow] = useState(false);
 
-    const handleAddTask = e => {
+    const handleKeyPress = e => {
+        if (e.which === 13 || e.keyCode === 13) {
+            handleAddTask();
+        }
+    }
+
+    const handleAddTask = () => {
         if (!input) {
             setShow(true);
             setTimeout(() => {
@@ -18,7 +24,13 @@ const AddTask = ({ task }) => {
             }, 1800);
             return;
         }
-        addTask(input);
+
+        let date = new Date();
+        props.addTask({
+            dateTimeAdded: `${date.getDate().toString().padStart(2, '0')} / ${date.getMonth().toString().padStart(2, '0')} / ${date.getFullYear().toString().padStart(4, '0')} ${date.getHours().toString().padStart(2, '0')} : ${date.getMinutes().toString().padStart(2, '0')}`.replace(/^ {4}/gm, ''),
+            name: input,
+            completed: false
+        });
         setInput("");
     };
 
@@ -27,7 +39,7 @@ const AddTask = ({ task }) => {
     return (
         <>
             <Input onChange={e => setInput(e.target.value)}
-                value={input} />
+                value={input} onKeyPress={handleKeyPress} />
             <Button ref={target} onClick={handleAddTask}>Add</Button>
             <Overlay target={target.current} show={show} placement="right">
                 {props => (
@@ -41,10 +53,7 @@ const AddTask = ({ task }) => {
 }
 
 
-export default connect(
-    null,
-    { addTask }
-)(AddTask);
+export default connect(null, { addTask })(AddTask);
 
 const StyledTooltip = styled(Tooltip)`
     background: #50FA7B;
@@ -61,20 +70,19 @@ const Input = styled.input`
     border-radius: 3px;
 `
 
-
 const Button = styled.button`
-        background: ${props => props.active ? "#BD93F9" : "inherit"};
-        color: ${props => props.complete ? "inherit" : "#BD93F9"};
-        &:hover {
-            background: #BD93F9;
-            color: #282A36;
-        }
-        &:focus {
-            outline: none;
-        }
-        font-size: 1em;
-        margin: 1em;
-        padding: 0.25em 1em;
-        border: 2px solid #BD93F9;
-        border-radius: 3px;
-    `
+    background: ${props => props.active ? "#BD93F9" : "inherit"};
+    color: ${props => props.complete ? "inherit" : "#BD93F9"};
+    &:hover {
+        background: #BD93F9;
+        color: #282A36;
+    }
+    &:focus {
+        outline: none;
+    }
+    font-size: 1em;
+    margin: 1em;
+    padding: 0.25em 1em;
+    border: 2px solid #BD93F9;
+    border-radius: 3px;
+`
