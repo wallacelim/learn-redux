@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
+import styled from 'styled-components';
 import { connect } from "react-redux";
 import { addTask } from "../redux/actions";
 import Overlay from 'react-bootstrap/Overlay'
@@ -17,15 +18,17 @@ const AddTask = ({ task }) => {
             }, 1800);
             return;
         }
-        this.props.addTask(this.state.input);
-        this.setState({ input: "" });
+        addTask(input);
+        setInput("");
     };
+
+    const target = useRef(null);
 
     return (
         <>
             <Input onChange={e => setInput(e.target.value)}
-                value={this.state.input} />
-            <Button ref={target} onClick={handleAdd}>Add</Button>
+                value={input} />
+            <Button ref={target} onClick={handleAddTask}>Add</Button>
             <Overlay target={target.current} show={show} placement="right">
                 {props => (
                     <StyledTooltip arrowProps={target} id="overlay-example" {...props}>
@@ -40,8 +43,8 @@ const AddTask = ({ task }) => {
 
 export default connect(
     null,
-    { addTodo }
-)(AddTodo);
+    { addTask }
+)(AddTask);
 
 const StyledTooltip = styled(Tooltip)`
     background: #50FA7B;
