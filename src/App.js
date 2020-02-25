@@ -21,7 +21,7 @@ function App() {
         let entry = {
             dateAdded: `${date.getDate().toString().padStart(2, '0')}/${date.getMonth().toString().padStart(2, '0')}/${date.getFullYear().toString().padStart(4, '0')} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`,
             taskName: document.getElementById('taskInput').value,
-            status: "IN-PROGRESS"
+            completed: false
         };
         setEntries([...entries, entry]);
     }
@@ -37,11 +37,7 @@ function App() {
     const handleStatusToggle = e => {
         let toToggle = e.target.getAttribute("name");
         let updatedEntry = entries[toToggle]
-        if (entries[toToggle].status === "IN-PROGRESS") {
-            updatedEntry.status = "COMPLETE";
-        } else if (entries[toToggle].status === "COMPLETE") {
-            updatedEntry.status = "IN-PROGRESS";
-        }
+        entries[toToggle].completed = !entries[toToggle].completed
         let newEntries = [
             ...entries.slice(0, toToggle),
             updatedEntry,
@@ -86,7 +82,7 @@ function App() {
                                 <TableDesc>{entry.dateAdded}</TableDesc>
                                 <TableDesc>{entry.taskName}</TableDesc>
                                 <TableDesc>
-                                    <ProgressButton name={idx} onClick={handleStatusToggle}> {entry.status} </ProgressButton>
+                                    <ProgressButton name={idx} onClick={handleStatusToggle}> {entry.completed ? "COMPLETE" : "IN-PROGRESS"} </ProgressButton>
                                 </TableDesc>
                                 <TableDesc>
                                     <RemoveButton name={idx} onClick={handleRemove}>Remove</RemoveButton>
