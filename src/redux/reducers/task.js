@@ -1,4 +1,4 @@
-import { ADD_TASK, TOGGLE_TASK, REMOVE_TASK } from '../actionTypes';
+import { ADD_TASK, TOGGLE_TASK, REMOVE_TASK } from "../actionTypes";
 
 export default (state = {}, action) => {
     switch (action.type) {
@@ -9,7 +9,7 @@ export default (state = {}, action) => {
                 completed: false
             };
         case REMOVE_TASK:
-            return state !== action.payload.task
+            return state !== action.payload.task;
         case TOGGLE_TASK:
             if (state !== action.payload.task) {
                 return state;
@@ -17,9 +17,8 @@ export default (state = {}, action) => {
             return {
                 ...state,
                 completed: !state.completed
-            }
+            };
         default:
             return state;
     }
-
-}
+};
