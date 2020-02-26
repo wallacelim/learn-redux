@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Table from "react-bootstrap/Table";
 import Overlay from "react-bootstrap/Overlay";
 import Tooltip from "react-bootstrap/Tooltip";
+import moment from "moment";
 import "./App.css";
 
 function App() {
@@ -15,24 +16,8 @@ function App() {
             }, 1800);
             return;
         }
-        let date = new Date();
         let entry = {
-            dateAdded: `${date
-                .getDate()
-                .toString()
-                .padStart(2, "0")}/${date
-                .getMonth()
-                .toString()
-                .padStart(2, "0")}/${date
-                .getFullYear()
-                .toString()
-                .padStart(4, "0")} ${date
-                .getHours()
-                .toString()
-                .padStart(2, "0")}:${date
-                .getMinutes()
-                .toString()
-                .padStart(2, "0")}`,
+            dateAdded: moment().format("MMMM Do YYYY, h:mm:ss a"),
             taskName: input,
             completed: false
         };
