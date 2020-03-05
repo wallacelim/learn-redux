@@ -1,11 +1,22 @@
 import React, { useState, useRef } from "react";
+import styled from "styled-components";
+import { connect } from "react-redux";
+import moment from "moment";
+import { addTask } from "../redux/actions";
 import Overlay from "react-bootstrap/Overlay";
 import Tooltip from "react-bootstrap/Tooltip";
-import styled from "styled-components";
-import moment from "moment";
 
 const AddTask = props => {
-    const handleAdd = () => {
+    const [input, setInput] = useState("");
+    const [show, setShow] = useState(false);
+
+    const handleKeyPress = e => {
+        if (e.which === 13 || e.keyCode === 13) {
+            handleAddTask();
+        }
+    };
+
+    const handleAddTask = () => {
         if (!input) {
             setShow(true);
             setTimeout(() => {
@@ -13,25 +24,26 @@ const AddTask = props => {
             }, 1800);
             return;
         }
+
         let entry = {
-            dateAdded: moment().format("MMMM Do YYYY, h:mm:ss a"),
-            taskName: input,
+            dateTimeAdded: moment().format("MMMM Do YYYY, h:mm:ss a"),
+            name: input,
             completed: false
         };
-        console.log(entry.dateAdded);
-        props.setEntries([...props.entries, entry]);
+        props.addTask(entry);
         setInput("");
     };
-
-    const [show, setShow] = useState(false);
-    const [input, setInput] = useState("");
 
     const target = useRef(null);
 
     return (
-        <Row>
-            <Input onChange={e => setInput(e.target.value)} value={input} />
-            <Button ref={target} onClick={handleAdd}>
+        <>
+            <Input
+                onChange={e => setInput(e.target.value)}
+                value={input}
+                onKeyPress={handleKeyPress}
+            />
+            <Button ref={target} onClick={handleAddTask}>
                 Add
             </Button>
             <Overlay target={target.current} show={show} placement="right">
@@ -45,19 +57,18 @@ const AddTask = props => {
                     </StyledTooltip>
                 )}
             </Overlay>
-        </Row>
+        </>
     );
 };
 
-export default AddTask;
+export default connect(null, { addTask })(AddTask);
 
-const Row = styled.div`
-    display: flex;
-    min-width: 100vw;
-    align-items: center;
-    justify-content: center;
+const StyledTooltip = styled(Tooltip)`
+    background: ${props => props.theme.green};
+    padding: 0.25em 0.5em;
+    margin-left: 5px;
+    border-radius: 3px;
 `;
-
 const Input = styled.input`
     font-size: 1em;
     margin: 1em;
@@ -80,12 +91,5 @@ const Button = styled.button`
     margin: 1em;
     padding: 0.25em 1em;
     border: 2px solid ${props => props.theme.pink};
-    border-radius: 3px;
-`;
-
-const StyledTooltip = styled(Tooltip)`
-    background: ${props => props.theme.green};
-    padding: 0.25em 0.5em;
-    margin-left: 5px;
     border-radius: 3px;
 `;
